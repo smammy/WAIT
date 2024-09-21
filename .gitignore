@@ -1,0 +1,9 @@
+*.o
+/MYMETA.*
+/Makefile
+/Makefile.old
+/WAIT.bs
+/WAIT.c
+/blib
+/lib/WAIT/Config.pm
+/pm_to_blib

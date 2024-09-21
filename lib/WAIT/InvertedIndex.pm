@@ -206,10 +206,10 @@ sub sort_postings {
   for my $did (sort {    $post->{$b} / $self->{db}->{$M, $b}
                                       <=>
                          $post->{$a} / $self->{db}->{$M, $a}
-                    } keys %$post) {
+                    } CORE::keys %$post) {
     $r .= pack 'w2', $did, $post->{$did};
   }
-  #warn sprintf "reorg %d %s\n", scalar keys %$post, join ' ', unpack 'w*', $r;
+  #warn sprintf "reorg %d %s\n", scalar CORE::keys %$post, join ' ', unpack 'w*', $r;
   $r;
 }
 
@@ -230,12 +230,12 @@ sub delete {
 
   grep $occ{$_}++, &{$self->{func}}(@_);
 
-  for (keys %occ) {# may reorder posting list
+  for (CORE::keys %occ) {# may reorder posting list
     my %post = unpack 'w*', $db->{$_};
     delete $post{$key};
     $db->{$_}    = $self->sort_postings(\%post);
-    _complain('delete of term', $_) if $db->{$O,$_}-1 != keys %post;
-    $db->{$O,$_} = scalar keys %post;
+    _complain('delete of term', $_) if $db->{$O,$_}-1 != CORE::keys %post;
+    $db->{$O,$_} = scalar CORE::keys %post;
   }
   delete $db->{$M, $key};
 }
@@ -358,10 +358,11 @@ sub parse {
 }
 
 sub keys {
+  warn "keys() subroutine called, y'know...\n";
   my $self  = shift;
 
   defined $self->{db} or $self->open;
-  keys %{$self->{db}};
+  CORE::keys %{$self->{db}};
 }
 
 sub search_prefix {
@@ -442,17 +443,17 @@ sub search_raw {
       # Unpack posting list for current query term $_
       my %post = unpack 'w*', $self->{db}->{$_};
 
-      _complain('search for term', $_) if $self->{db}->{$O,$_} != keys %post;
+      _complain('search for term', $_) if $self->{db}->{$O,$_} != CORE::keys %post;
       # This is the inverse document frequency. The log of the inverse
       # fraction of documents the term occurs in.
       my $idf = log($self->{records}/$df);
-      for my $did (keys %post) {
+      for my $did (CORE::keys %post) {
         if (my $freq = $self->{db}->{$M, $did}) {
           $score{$did} += $post{$did} / $freq * $idf;
         }
       }
     }
-    # warn sprintf "Used %d accumulators\n", scalar keys %score;
+    # warn sprintf "Used %d accumulators\n", scalar CORE::keys %score;
     return %score;
   }
 
@@ -465,7 +466,7 @@ sub search_raw {
       # Lookup the number of documents the term occurs in (document frequency)
       my $occ  = $self->{db}->{$O,$_};
 
-      _complain('search for term', $_) if $self->{db}->{$O,$_} != keys %post;
+      _complain('search for term', $_) if $self->{db}->{$O,$_} != CORE::keys %post;
       # The frequency *must* be 1 at least since the posting list is nonempty
       _complain('search for term', $_) and $occ = 1 if $occ < 1;
 
@@ -486,14 +487,14 @@ sub search_raw {
       # improved.  The resulting ranking list must be pruned, since only
       # the top most documents end up near their "optimal" rank.
       
-      if (keys %score < $wanted) {
-        for my $did (keys %post) {
+      if (CORE::keys %score < $wanted) {
+        for my $did (CORE::keys %post) {
           if (my $freq = $self->{db}->{$M, $did}) {
             $score{$did} += $post{$did} / $freq * $idf;
           }
         }
       } else {
-        for my $did (keys %score) {
+        for my $did (CORE::keys %score) {
           next unless exists $post{$did};
           if (my $freq = $self->{db}->{$M, $did}) {
             $score{$did} += $post{$did} / $freq * $idf;
@@ -543,7 +544,7 @@ sub search_raw {
     my %post = unpack 'w*', $self->{db}->{$term};
 
     _complain('search for term', $term)
-      if $self->{db}->{$O,$term} != keys %post;
+      if $self->{db}->{$O,$term} != CORE::keys %post;
 
     my $idf  = $idf[$i];
     my $full;                   # Need to process all postings
@@ -558,7 +559,7 @@ sub search_raw {
         # the preparation loop
         # $self->{reorg} and
 
-        scalar keys %score > $wanted) {
+        scalar CORE::keys %score > $wanted) {
       $chop = (sort { $b <=> $a } values %score)[$wanted];
       $full = $max[$i] > $chop;
     } else {
@@ -571,7 +572,7 @@ sub search_raw {
       # yet.
       if (defined $chop) {
         # We might be able to avoid allocating accumulators
-        for my $did (keys %post) {
+        for my $did (CORE::keys %post) {
           if (my $freq = $self->{db}->{$M, $did}) {
             my $wgt = $post{$did} / $freq * $idf;
             # We add an accumulator if $wgt exeeds $chop
@@ -582,7 +583,7 @@ sub search_raw {
         }
       } else {
         # Allocate acumulators for each seen document.
-        for my $did (keys %post) {
+        for my $did (CORE::keys %post) {
           if (my $freq = $self->{db}->{$M, $did}) {
             $score{$did} += $post{$did} / $freq * $idf;
           }
@@ -590,7 +591,7 @@ sub search_raw {
       }
     } else {
       # Update existing accumulators
-      for my $did (keys %score) {
+      for my $did (CORE::keys %score) {
         next unless exists $post{$did};
         if (my $freq = $self->{db}->{$M, $did}) {
           $score{$did} += $post{$did} / $freq * $idf;
@@ -598,7 +599,7 @@ sub search_raw {
       }
     }
   }
-  #warn sprintf "Used %d accumulators\n", scalar keys %score;
+  #warn sprintf "Used %d accumulators\n", scalar CORE::keys %score;
   %score;
 }
 

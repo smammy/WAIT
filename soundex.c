@@ -590,7 +590,7 @@ void main ()
   PrintCode("AUGER");
   PrintCode("Krueger");
   PrintCode("Kruger");
-  PrintCode("Krüger");
+  PrintCode("Kr\xFCger");
   while (1) {
     PrintCode(gets(s));
   }

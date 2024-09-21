@@ -35,7 +35,7 @@ allow for bulk inserts.
 Documentation
 =============
 
-WAIT is still not documented really.  But Andreas König took the
+WAIT is still not documented really.  But Andreas KÃ¶nig took the
 trouble to comment the example scripts.  This will help you
 implementing your own applications.  I added some tiny scripts to
 index e.g. your .yow file or the fourtune databases.

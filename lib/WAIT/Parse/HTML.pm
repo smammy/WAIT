@@ -2,7 +2,7 @@
 #                              -*- Mode: Perl -*- 
 # $Basename: HTML.pm $
 # $Revision: 1.2 $
-# Author          : Ulrich Pfeifer with Andreas König
+# Author          : Ulrich Pfeifer with Andreas KÃ¶nig
 # Created On      : Sat Nov 1 1997
 # Last Modified By: Ulrich Pfeifer
 # Last Modified On: Wed Nov  5 16:48:17 1997

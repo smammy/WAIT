@@ -153,7 +153,7 @@ sub filter {
         }
       } else {
         if (exists $tag{_qt}) {
-          push @result, {_i=>1}, "\n[ $elipsis lines ]\n" if $elipsis;
+          push @result, {_i=>1}, "\n[ $elipsis lines\xA0]\n" if $elipsis;
           push @result, @context, {%tag}, $_;
           delete $tag{_qt};
           @context = (); $clines = 0; $elipsis=0;

@@ -176,12 +176,12 @@ FT: DIA; logistic regression; maximum likelihood estimation
 
 CK: Burghardt/etal:93
 DT: IP
-AU: Burghardt, A.; Fuhr, N.; Groﬂjohann, K.;  Pfeifer, U.;
+AU: Burghardt, A.; Fuhr, N.; Gro√üjohann, K.;  Pfeifer, U.;
     Spielmann, H.; Stach, O.
 TI: NOSFERATU --- ein integriertes Datenbank- und
     Informationssystem basierend auf dem Datenstrom-Paradigma
 BT: Proceedings 1. GI-Fachtagung Information Retrieval
-PN: Universit‰tsverlag Konstanz
+PN: Universit√§tsverlag Konstanz
 PA: Konstanz
 PP: 27-40
 LA: GE
@@ -195,12 +195,12 @@ FT: stream-oriented
 
 CK: Burghardt/etal:93a
 DT: IP
-AU: Burghardt, A.; Fuhr, N.; Groﬂjohann, K.;  Pfeifer, U.;
+AU: Burghardt, A.; Fuhr, N.; Gro√üjohann, K.;  Pfeifer, U.;
     Spielmann, H.; Stach, O.
 TI: NOSFERATU --- an Integrated Database Management and Information
     Retrieval system based on Data Streams (in German)
 BT: Proceedings 1. GI-Fachtagung Information Retrieval
-PN: Universit‰tsverlag Konstanz
+PN: Universit√§tsverlag Konstanz
 PA: Konstanz
 PP: 27-40
 LA: GE
@@ -215,10 +215,10 @@ FT: stream-oriented
 CK: Pfeifer/Fuhr:93
 DT: IP
 AU: Pfeifer, U.; Fuhr, N.
-TI: Aufwandsabsch‰tzung f¸r die Prozessierung vager Anfragen auf der
+TI: Aufwandsabsch√§tzung f√ºr die Prozessierung vager Anfragen auf der
     Basis des Datenstrom-Ansatzes
 ER: Stucky, W.
-BT: Datenbanksysteme in B¸ro, Technik und Wissenschaft
+BT: Datenbanksysteme in B√ºro, Technik und Wissenschaft
 PN: Springer
 PA: Berlin et al.
 PP: 375-392
@@ -234,9 +234,9 @@ FT: stream-oriented
 CK: Schmidt/Pfeifer:93
 DT: IP
 AU: Schmidt, M.; Pfeifer, U.
-TI: Eignung von Signaturb‰umen f¸r Best-Match-Anfragen
+TI: Eignung von Signaturb√§umen f√ºr Best-Match-Anfragen
 BT: Proceedings 1. GI-Fachtagung Information Retrieval
-PN: Universit‰tsverlag Konstanz
+PN: Universit√§tsverlag Konstanz
 PA: Konstanz
 PP: 125-138
 LA: GE
@@ -255,7 +255,7 @@ AU: Schmidt, M.; Pfeifer, U.
 TI: Suitability of Signature Trees for Processing of Best Match
     Queries (in German)
 BT: Proceedings 1. GI-Fachtagung Information Retrieval
-PN: Universit‰tsverlag Konstanz
+PN: Universit√§tsverlag Konstanz
 PA: Konstanz
 PP: 125-138
 LA: GE
@@ -269,5 +269,5 @@ FT: signature files; signature trees
 ED: 24.06.93
 
 CK: Weird:??
-AU: ƒ¸borg
-TI: ‰bˆr ﬂ‰lb‰r
+AU: √Ñ√ºborg
+TI: √§b√∂r √ü√§lb√§r

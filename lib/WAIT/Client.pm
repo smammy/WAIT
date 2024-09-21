@@ -9,7 +9,7 @@
 # Update Count    : 85
 # Status          : Unknown, Use with caution!
 #
-# (C) Copyright 1997, Universit‰t Dortmund, all rights reserved.
+# (C) Copyright 1997, Universit√§t Dortmund, all rights reserved.
 #
 
 package WAIT::Client;

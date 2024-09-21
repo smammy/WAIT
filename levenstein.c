@@ -1,15 +1,15 @@
 /****  Einfache Levenshtein-Distanz (p0=q0=r0=1) ****/
-/****  mit Berücksichtigung von Wildcards        ****/
+/****  mit BerÃ¼cksichtigung von Wildcards        ****/
 /****  (geschwindigkeitsoptimiertes C-Programm)  ****/
-/****  Autor :  Jörg Michael, Hannover           ****/
+/****  Autor :  JÃ¶rg Michael, Hannover           ****/
 /****  Datum :  22. Dezember 1993                ****/
 
 /****  modus = ' ': normale Levenshtein-Distanz  ****/
 /****  modus = '+': keine Unterscheidung         ****/
-/****               Klein-/Großschreibung        ****/
-/****  modus = '*': wie '+', aber zusätzlich     ****/
+/****               Klein-/GroÃŸschreibung        ****/
+/****  modus = '*': wie '+', aber zusÃ¤tzlich     ****/
 /****               "symmetrisches" Verhalten    ****/
-/****               gemäß der im Text beschrie-  ****/
+/****               gemÃ¤ÃŸ der im Text beschrie-  ****/
 /****               benen Vorformatierung        ****/
 
 #ifdef __cplusplus
@@ -32,7 +32,7 @@ formatierung(char ziel[], char wort[], int n, char modus)
 /****  Wandelt "wort" in GROSSschreibung  ****/
 /****  um und expandiert Umlaute          ****/
 /****  (n = Zeichenzahl von "ziel")       ****/
-/****  Zurückgegeben wird: strlen (ziel)  ****/
+/****  ZurÃ¼ckgegeben wird: strlen (ziel)  ****/
 {
   int             i, k;
   char            c, *s;
@@ -45,7 +45,7 @@ formatierung(char ziel[], char wort[], int n, char modus)
     } else if (islower(c)) {
       ziel[k++] = c - 'a' + 'A';
     } else {
-      s = strchr("ÄAEäAEÖOEöOEÜUEüUEßSS", c);
+      s = strchr("\304AE\344AE\326OE\366OE\334UE\374UE\337SS", c);
       if (s != NULL) {
 	ziel[k++] = *(s + 1);
 	if (k < n - 1) {

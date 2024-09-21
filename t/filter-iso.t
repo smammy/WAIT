@@ -18,9 +18,9 @@ use WAIT::Filter qw(isolc isouc disolc disouc);
 $loaded = 1;
 print "ok 1\n";
 
-@mixed = qw(Ulrich Pfeifer Großjohann Bäuerchen äußersts Übel);
-@lower = qw(ulrich pfeifer großjohann bäuerchen äußersts übel);
-@upper = qw(ULRICH PFEIFER GROßJOHANN BÄUERCHEN ÄUßERSTS ÜBEL);
+@mixed = ("Ulrich", "Pfeifer", "Gro\337johann", "B\344uerchen", "\344u\337ersts", "\334bel");
+@lower = ("ulrich", "pfeifer", "gro\337johann", "b\344uerchen", "\344u\337ersts", "\374bel");
+@upper = ("ULRICH", "PFEIFER", "GRO\337JOHANN", "B\304UERCHEN", "\304U\337ERSTS", "\334BEL");
 $test = 2;
 
 my $m;

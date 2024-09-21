@@ -9,7 +9,7 @@
  * Update Count    : 8
  * Status          : Unknown, Use with caution!
  * 
- * (C) Copyright 1996, Universit‰t Dortmund, all rights reserved.
+ * (C) Copyright 1996, Universit√§t Dortmund, all rights reserved.
  * 
  * $Locker:  $
  * $Log: levenstein.h,v $

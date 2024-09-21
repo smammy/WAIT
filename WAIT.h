@@ -9,7 +9,7 @@
  * Update Count    : 5
  * Status          : Unknown, Use with caution!
  * 
- * (C) Copyright 1996, Universit‰t Dortmund, all rights reserved.
+ * (C) Copyright 1996, Universit√§t Dortmund, all rights reserved.
  * 
  * $Locker:  $
  * $Log: WAIT.h,v $

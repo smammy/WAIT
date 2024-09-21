@@ -23,10 +23,10 @@ Wed Nov  5 16:45:09 1997  Ulrich Pfeifer  <pfeifer@wait.de>
 
 	* lib/WAIT/Document/Find.pm: -w fixes
 
-	* script/index-html.PL: Created with Andreas König butchering
+	* script/index-html.PL: Created with Andreas KÃ¶nig butchering
  	smakewhatis.
 
-	* lib/WAIT/Parse/HTML.pm: Created with Andreas König
+	* lib/WAIT/Parse/HTML.pm: Created with Andreas KÃ¶nig
 
 	* lib/WAIT/Filter.pm (decode_entities): Try importing from
  	HTML::Entities on demand.

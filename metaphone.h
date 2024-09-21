@@ -9,7 +9,7 @@
  * Update Count    : 2
  * Status          : Unknown, Use with caution!
  * 
- * (C) Copyright 1996, Universit‰t Dortmund, all rights reserved.
+ * (C) Copyright 1996, Universit√§t Dortmund, all rights reserved.
  * 
  * $Locker:  $
  * $Log: metaphone.h,v $

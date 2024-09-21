@@ -394,7 +394,7 @@ phonetic(name, metaph, metalen)
   lastChr = Lng - 1; /* index to last character in string makes code easier */
 
   /* Remove an S from the end of the string */
-  if ((ename[lastChr] == 'S') || (ename[lastChr] == 'ß')) {
+  if ((ename[lastChr] == 'S') || (ename[lastChr] == '\xDF')) {
     ename[lastChr] = '\0';
     Lng = strlen(ename);
     lastChr = Lng - 1;

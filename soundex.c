@@ -155,6 +155,8 @@ unsigned char *Key;
     }
   }
 }
+#else
+void SoundexCode (unsigned char *Name, unsigned char *Key);
 #endif /* 0 */
 
 /****************************************************************************

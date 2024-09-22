@@ -32,7 +32,7 @@ extern "C"
 	{
 #endif /* def __cplusplus */
 
-
+void phonetic(char *name, char *metaph, int metalen);
 char * metaphone _((char *word, char *code, int codesize));
 
 #ifdef __cplusplus

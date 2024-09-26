@@ -54,8 +54,8 @@ sub server {
 
        #printf STDERR "=== %s %s\n", unpack ('b*', $SEL->[0]), join ':', @ready;
        #sleep 1;
-      REQUEST:
         alarm(25);
+      REQUEST:
         foreach $fh (@ready) {
             if ($fh == $lsn) {
                 my $new = $lsn->accept;    # Create a new socket

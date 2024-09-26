@@ -2,283 +2,289 @@ package WAIT::Server::Connection;
 use strict;
 use Sys::Hostname;
 use Socket qw(AF_INET unpack_sockaddr_in);
-use vars qw(%CMD %MSG %HELP);
+use vars   qw(%CMD %MSG %HELP);
 
 my $HOST = hostname;
 {
-  no strict;
-  local *stab = *WAIT::Server::Connection::;
-  my ($key,$val);
-  while (($key,$val) = each(%stab)) {
-    next unless $key =~ /^cmd_(.*)/;
-    local(*ENTRY) = $val;
-    if (defined &ENTRY) {
-      $CMD{$1} = \&ENTRY;
+    no strict;
+    local *stab = *WAIT::Server::Connection::;
+    my ($key, $val);
+    while (($key, $val) = each(%stab)) {
+        next unless $key =~ /^cmd_(.*)/;
+        local (*ENTRY) = $val;
+        if (defined &ENTRY) {
+            $CMD{$1} = \&ENTRY;
+        }
     }
-  }
 }
 
-
 sub new {
-  my $type = shift;
-  my $fh   = shift;
-  my $msg  = shift;
-  my $self = {_fh => $fh};
-  
-  my $hersockaddr    = $fh->peername();
-  my ($port, $iaddr) = unpack_sockaddr_in($hersockaddr);
-  my $peer           = gethostbyaddr($iaddr, AF_INET);
-  $self->{peer}      = $peer;
-  $self->{database}  = 'DB';
-  $self->{table}     = 'cpan';
-  $self->{hits}      = 10;
-  print "Connection from $peer\n";
-  bless $self, $type;
-  $self->msg(200, $msg);
-  $self;
+    my $type = shift;
+    my $fh   = shift;
+    my $msg  = shift;
+    my $self = { _fh => $fh };
+
+    my $hersockaddr = $fh->peername();
+    my ($port, $iaddr) = unpack_sockaddr_in($hersockaddr);
+    my $peer = gethostbyaddr($iaddr, AF_INET);
+    $self->{peer}     = $peer;
+    $self->{database} = 'DB';
+    $self->{table}    = 'cpan';
+    $self->{hits}     = 10;
+    print "Connection from $peer\n";
+    bless $self, $type;
+    $self->msg(200, $msg);
+    $self;
 }
 
 sub close {
-  my $self = shift;
+    my $self = shift;
 
-  $self->{_fh}->close;
+    $self->{_fh}->close;
 }
 
-
 sub dispatch {
-  my $self = shift;
-  my $cmd  = shift;
+    my $self = shift;
+    my $cmd  = shift;
 
-  print "$cmd @_\n";
-  unless (exists $CMD{$cmd}) {
-    $self->msg(500);
-  } else {
-    &{$CMD{$cmd}}($self, @_);
-  }
-  $cmd;
+    print "$cmd @_\n";
+    unless (exists $CMD{$cmd}) {
+        $self->msg(500);
+    }
+    else {
+        &{ $CMD{$cmd} }($self, @_);
+    }
+    $cmd;
 }
 
 sub msg {
-  my $self = shift;
-  my $code = shift;
-  my $msg  = $MSG{$code} || '';
-  printf("%s %s %03d $msg\r\n", scalar(localtime(time)), $self->{peer}, $code, @_);
-  $self->{_fh}->datasend(sprintf("%03d $msg\r\n", $code, @_));
+    my $self = shift;
+    my $code = shift;
+    my $msg  = $MSG{$code} || '';
+    printf(
+        "%s %s %03d $msg\r\n",
+        scalar(localtime(time)),
+        $self->{peer}, $code, @_
+    );
+    $self->{_fh}->datasend(sprintf("%03d $msg\r\n", $code, @_));
 }
 
 sub end {
-  my $self = shift;
-  $self->{_fh}->dataend;
+    my $self = shift;
+    $self->{_fh}->dataend;
 }
 
-
 require WAIT::Query::Wais;
 require WAIT::Database;
 use Fcntl;
 
-my %DB;                         # cache Databas handles
+my %DB;    # cache Databas handles
+
 sub DATABASE {
-  my $dn = shift;
+    my $dn = shift;
 
-  return $DB{$dn} if exists $DB{$dn};
-  $DB{$dn} = WAIT::Database->open(name      => $dn,
-                                  directory => $WAIT::Config->{'WAIT_home'},
-                                  mode      => O_RDONLY);
-  return $DB{$dn};
+    return $DB{$dn} if exists $DB{$dn};
+    $DB{$dn} = WAIT::Database->open(
+        name      => $dn,
+        directory => $WAIT::Config->{'WAIT_home'},
+        mode      => O_RDONLY
+    );
+    return $DB{$dn};
 }
 
-my %TB;                         # cache Table handles
+my %TB;    # cache Table handles
+
 sub TABLE {
-  my ($dbname, $tname) = @_;
+    my ($dbname, $tname) = @_;
 
-  return $TB{$dbname.$tname} if exists $TB{$dbname.$tname};
-  my $db = DATABASE($dbname);
+    return $TB{ $dbname . $tname } if exists $TB{ $dbname . $tname };
+    my $db = DATABASE($dbname);
 
-  $TB{$dbname.$tname} = $db->table(name => $tname);
-  $TB{$dbname.$tname};
+    $TB{ $dbname . $tname } = $db->table(name => $tname);
+    $TB{ $dbname . $tname };
 }
 
-
 # helpers
 sub result {
-  my $self   = shift;
-  my $hit    = shift;
-  my $did;
+    my $self = shift;
+    my $hit  = shift;
+    my $did;
 
-  # http uses raw document id's
-  if ($self->{http}) {
-    return $hit;
-  }
-  unless ($self->{result}) {
-    $self->msg(404);
-    return;
-  }
-  unless ($did = $self->{result}->[$hit-1]) {
-    $self->msg(405);
-    return;
-  }
-  return $did;
+    # http uses raw document id's
+    if ($self->{http}) {
+        return $hit;
+    }
+    unless ($self->{result}) {
+        $self->msg(404);
+        return;
+    }
+    unless ($did = $self->{result}->[ $hit - 1 ]) {
+        $self->msg(405);
+        return;
+    }
+    return $did;
 }
 
 sub table {
-  my $self   = shift;
-  
-  TABLE($self->{database}, $self->{table});
+    my $self = shift;
+
+    TABLE($self->{database}, $self->{table});
 }
 
 sub output {
-  my $self = shift;
+    my $self = shift;
 
-  $self->{_fh}->datasend(@_);
+    $self->{_fh}->datasend(@_);
 }
 
-
 # The commands
 
 sub cmd_help {
-  my $self = shift;
+    my $self = shift;
 
-  $self->msg(100);
-  for (sort keys %CMD) {
-    $self->output(sprintf("%-15s %s\r\n", $_, $HELP{$_}||''));
-  }
-  $self->end;
+    $self->msg(100);
+    for (sort keys %CMD) {
+        $self->output(sprintf("%-15s %s\r\n", $_, $HELP{$_} || ''));
+    }
+    $self->end;
 }
 
 sub cmd_quit {
-  my $self = shift;
-  $self->msg(205);
+    my $self = shift;
+    $self->msg(205);
 }
 
 sub cmd_database {
-  my $self   = shift;
-  my $dbname = shift || $self->{database};
+    my $self   = shift;
+    my $dbname = shift || $self->{database};
 
-
-  if (DATABASE($dbname)) {
-    delete $self->{'result'};
-    $self->{database} = $dbname;
-    $self->msg(201, $dbname);
-  } else {
-    $self->msg(401, $dbname);
-  }
+    if (DATABASE($dbname)) {
+        delete $self->{'result'};
+        $self->{database} = $dbname;
+        $self->msg(201, $dbname);
+    }
+    else {
+        $self->msg(401, $dbname);
+    }
 }
 
 sub cmd_table {
-  my $self   = shift;
-  my $table  = shift || $self->{'table'};
-  my $dbname = $self->{'database'};
+    my $self   = shift;
+    my $table  = shift || $self->{'table'};
+    my $dbname = $self->{'database'};
 
-  if (TABLE($dbname, $table)) {
-    delete $self->{'result'};
-    $self->{'table'} = $table;
-    $self->msg(202, $table);
-  } else {
-    $self->msg(402, $table);
-  }
+    if (TABLE($dbname, $table)) {
+        delete $self->{'result'};
+        $self->{'table'} = $table;
+        $self->msg(202, $table);
+    }
+    else {
+        $self->msg(402, $table);
+    }
 }
 
 sub cmd_hits {
-  my $self   = shift;
-  my $hits   = shift;
+    my $self = shift;
+    my $hits = shift;
 
-  if ($hits) {
-    $self->{hits} = $hits;
-    $self->msg(204, $hits);
-  } else {
-    $self->msg(501);
-  }
+    if ($hits) {
+        $self->{hits} = $hits;
+        $self->msg(204, $hits);
+    }
+    else {
+        $self->msg(501);
+    }
 }
 
 sub cmd_info {
-  my $self   = shift;
-  my $hit    = shift;
+    my $self = shift;
+    my $hit  = shift;
 
-  my $did    = $self->result($hit);
-  return unless $did;
-  
-  my $tb     = $self->table;
+    my $did = $self->result($hit);
+    return unless $did;
 
-  my %rec    = $tb->fetch($did);
-  $self->msg(207, $did);
-  for (keys %rec) {
-    $self->{_fh}->datasend(sprintf("%-15s %s\n", $_, $rec{$_}));
-  }
-  $self->end;
+    my $tb = $self->table;
+
+    my %rec = $tb->fetch($did);
+    $self->msg(207, $did);
+    for (keys %rec) {
+        $self->{_fh}->datasend(sprintf("%-15s %s\n", $_, $rec{$_}));
+    }
+    $self->end;
 }
 
 sub cmd_get {
-  my $self   = shift;
-  my $hit    = shift;
-  my $did    = $self->result($hit);
+    my $self = shift;
+    my $hit  = shift;
+    my $did  = $self->result($hit);
 
-  return unless $did;
-  my $tb     = $self->table;
-  my %rec    = $tb->fetch($did);
-  my $key    = $rec{docid};
+    return unless $did;
+    my $tb  = $self->table;
+    my %rec = $tb->fetch($did);
+    my $key = $rec{docid};
 
-  $key = $tb->dir . '/' . $key if $key =~ m(^data/);
+    $key = $tb->dir . '/' . $key if $key =~ m(^data/);
 
-  my $text   = $tb->fetch_extern($key);
-  
-  $self->msg(206, $did);
-  $self->output($text);
-  $self->output("\n") unless $text =~ /\n$/;
-  $self->end;
+    my $text = $tb->fetch_extern($key);
+
+    $self->msg(206, $did);
+    $self->output($text);
+    $self->output("\n") unless $text =~ /\n$/;
+    $self->end;
 }
 
 sub cmd_search {
-  my $self   = shift;
-  my $query  = join ' ', @_;
-  my $tb     = $self->table;
+    my $self  = shift;
+    my $query = join ' ', @_;
+    my $tb    = $self->table;
 
-  my $wq = eval {WAIT::Query::Wais::query($tb, $query)};
-  unless ($wq) {
-    $self->msg(403);
-    return;
-  }
-  my %hits = $wq->execute();
-  my @did = sort {$hits{$b} <=> $hits{$a}}keys %hits;
+    my $wq = eval { WAIT::Query::Wais::query($tb, $query) };
+    unless ($wq) {
+        $self->msg(403);
+        return;
+    }
+    my %hits = $wq->execute();
+    my @did  = sort { $hits{$b} <=> $hits{$a} } keys %hits;
 
-  # sanity check. this is expensive and should be obsolete!
-  # @did =  grep $tb->fetch($_), @did;
+    # sanity check. this is expensive and should be obsolete!
+    # @did =  grep $tb->fetch($_), @did;
 
-  $self->{'result'} = \@did;
-  my $all_hits  = scalar @did;
-  my $send_hits = $all_hits;
+    $self->{'result'} = \@did;
+    my $all_hits  = scalar @did;
+    my $send_hits = $all_hits;
 
-  if ($send_hits > $self->{hits}) {
-    $send_hits = $self->{hits};
-  }
-  $self->msg(203, $all_hits, $send_hits);
-  my $i;
-  
-  for ($i=1;$i<=$send_hits;$i++) {
-    my $did = $did[$i-1];
-    my %rec = $tb->fetch($did);
-    $self->{_fh}->datasend(sprintf("%2d %5.3f %s\n",
-                                   $self->{http}?$did:$i,
-                                   $hits{$did},
-                                   $rec{headline}));
-  }
-  $self->end();
+    if ($send_hits > $self->{hits}) {
+        $send_hits = $self->{hits};
+    }
+    $self->msg(203, $all_hits, $send_hits);
+    my $i;
+
+    for ($i = 1 ; $i <= $send_hits ; $i++) {
+        my $did = $did[ $i - 1 ];
+        my %rec = $tb->fetch($did);
+        $self->{_fh}->datasend(
+            sprintf("%2d %5.3f %s\n",
+                $self->{http} ? $did : $i,
+                $hits{$did}, $rec{headline})
+        );
+    }
+    $self->end();
 }
-
+
 # read status messages
 my $line;
-while (defined ($line = <DATA>)) {
-  chomp($line);
-  my ($cmd, $msg) = split ' ', $line, 2;
-  last unless $cmd;
-  $HELP{$cmd} = $msg;
+while (defined($line = <DATA>)) {
+    chomp($line);
+    my ($cmd, $msg) = split ' ', $line, 2;
+    last unless $cmd;
+    $HELP{$cmd} = $msg;
 }
-while (defined ($line = <DATA>)) {
-  chomp($line);
-  next unless $line =~ /^\d/;
-  my ($code, $msg) = split ' ', $line, 2;
-  $MSG{$code} = $msg;
+while (defined($line = <DATA>)) {
+    chomp($line);
+    next unless $line =~ /^\d/;
+    my ($code, $msg) = split ' ', $line, 2;
+    $MSG{$code} = $msg;
 }
-
 
 1;
 

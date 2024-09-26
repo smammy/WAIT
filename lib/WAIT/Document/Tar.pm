@@ -1,4 +1,4 @@
-#!/app/unido-i06/magic/perl
+#!/usr/bin/env perl
 #                              -*- Mode: Perl -*- 
 # Tar.pm -- 
 # ITIID           : $ITI$ $Header $__Header$

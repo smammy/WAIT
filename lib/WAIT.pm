@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #                              -*- Mode: Cperl -*-
 # $Basename: WAIT.pm $
 # $Revision: 1.7 $

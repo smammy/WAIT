@@ -1,4 +1,4 @@
-#!/usr/local/perl5.005_56.Mar06/bin/perl -w
+#!/usr/bin/env perl -w
 ######################### -*- Mode: Perl -*- #########################
 ##
 ## $Basename: cpanwait $

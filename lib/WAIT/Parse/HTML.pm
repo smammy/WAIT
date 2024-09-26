@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #                              -*- Mode: Perl -*- 
 # $Basename: HTML.pm $
 # $Revision: 1.2 $

@@ -1,4 +1,4 @@
-#!/usr/local/perl5.005_56.Mar06/bin/perl -w
+#!/usr/bin/env perl -w
 eval 'exec perl -w -S $0 "$@"'
     if 0;
 

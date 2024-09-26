@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 #                              -*- Mode: Perl -*- 
 # $Basename: wais.t $
 # $Revision: 1.14 $
